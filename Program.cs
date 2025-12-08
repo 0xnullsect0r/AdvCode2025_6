@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 class TrashCompactorSolver
 {
@@ -32,7 +31,6 @@ class TrashCompactorSolver
             lines[i] = lines[i].PadRight(maxLen);
         }
         
-
         List<(int start, int end)> problemRanges = new List<(int, int)>();
         int col = 0;
         
@@ -61,21 +59,23 @@ class TrashCompactorSolver
         {
             var (start, end) = problemRanges[p];
             
-            List<string> problemLines = new List<string>();
-            for (int row = 0; row < lines.Length; row++)
-            {
-                string segment = lines[row].Substring(start, end - start).TrimEnd();
-                problemLines.Add(segment);
-            }
-            
-            string opLine = problemLines[problemLines.Count - 1].Trim();
-            char operation = opLine.Length > 0 ? opLine[0] : '+';
+            char operation = lines[lines.Length - 1][start];
             
             List<long> numbers = new List<long>();
-            for (int row = 0; row < problemLines.Count - 1; row++)
+            
+            for (col = end - 1; col >= start; col--)
             {
-                string numStr = problemLines[row].Trim();
-                if (!string.IsNullOrWhiteSpace(numStr) && long.TryParse(numStr, out long num))
+                string digitStr = "";
+                for (int row = 0; row < lines.Length - 1; row++)
+                {
+                    char ch = lines[row][col];
+                    if (ch >= '0' && ch <= '9')
+                    {
+                        digitStr += ch;
+                    }
+                }
+                
+                if (!string.IsNullOrEmpty(digitStr) && long.TryParse(digitStr, out long num))
                 {
                     numbers.Add(num);
                 }
